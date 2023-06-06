@@ -3,6 +3,7 @@ package com.example.springappprofessional.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(
   name = "customer",
