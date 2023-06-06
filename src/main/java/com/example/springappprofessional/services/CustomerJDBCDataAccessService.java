@@ -5,11 +5,13 @@ import com.example.springappprofessional.mappers.CustomerRowMapper;
 import com.example.springappprofessional.models.Customer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository("Jdbc")
 @RequiredArgsConstructor
 public class CustomerJDBCDataAccessService implements CustomerDao {
 

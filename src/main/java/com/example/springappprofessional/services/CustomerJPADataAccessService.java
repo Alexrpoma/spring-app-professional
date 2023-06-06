@@ -4,11 +4,13 @@ import com.example.springappprofessional.dao.CustomerDao;
 import com.example.springappprofessional.models.Customer;
 import com.example.springappprofessional.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository("Jpa")
 @RequiredArgsConstructor
 public class CustomerJPADataAccessService implements CustomerDao {
 
