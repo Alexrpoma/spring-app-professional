@@ -1,9 +1,7 @@
 package com.example.springappprofessional.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -26,6 +24,8 @@ import static jakarta.persistence.GenerationType.AUTO;
     )
   }
 )
+@NoArgsConstructor
+@AllArgsConstructor
 public class Customer {
 
   @Id
@@ -44,4 +44,14 @@ public class Customer {
   private String password;
   @Column(name = "profile_image_id")
   private String profileImageId;
+
+  public Customer(UUID id, String name, String email, Integer age, Gender gender, String profileImageId) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+    this.age = age;
+    this.gender = gender;
+    this.profileImageId = profileImageId;
+  }
+
 }
