@@ -49,7 +49,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
       customer.getName(),
       customer.getEmail(),
       customer.getPassword(),
-      customer.getGender(),
+      customer.getGender().name(),
       customer.getAge());
 
     System.out.println(result);

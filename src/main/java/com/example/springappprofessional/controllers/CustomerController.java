@@ -1,28 +1,32 @@
 package com.example.springappprofessional.controllers;
 
-import com.example.springappprofessional.dao.CustomerDao;
 import com.example.springappprofessional.models.Customer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.springappprofessional.services.CustomerService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/customer")
 public class CustomerController {
 
-  private final CustomerDao customerDao;
-
-  @Autowired
-  public CustomerController(@Qualifier("Jdbc") CustomerDao customerDao) {
-    this.customerDao = customerDao;
-  }
+  private final CustomerService customerService;
 
   @GetMapping
-  public List<Customer> getAllCustomers() {
-    return customerDao.getAllCustomer();
+  public List<Customer> getAllCustomer() {
+    return customerService.getAllCustomer();
+  }
+
+  @GetMapping(path = "/{uuid}")
+  public Customer getCustomer(@PathVariable(name = "uuid") UUID uuid) {
+    return customerService.getCustomer(uuid);
+  }
+
+  @PostMapping
+  public void registerCustomer(@RequestBody Customer customer) {
+    customerService.addCustomer(customer);
   }
 }
