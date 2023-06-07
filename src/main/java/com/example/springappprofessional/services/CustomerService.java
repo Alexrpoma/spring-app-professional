@@ -2,6 +2,7 @@ package com.example.springappprofessional.services;
 
 import com.example.springappprofessional.dao.CustomerDao;
 import com.example.springappprofessional.models.Customer;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -48,10 +49,14 @@ public class CustomerService {
     customerDao.deleteCustomerById(uuid);
   }
 
+  @Transactional  //update customer if it is possible, assurance that the data is not corrupt
   public void updateCustomer(UUID uuid, Customer uptadeCustomer) {
     Optional<Customer> customerOptional = customerDao.getCustomerById(uuid);
-    if (!customerOptional.isPresent()) {
+    if (customerOptional.isEmpty()) {
       throw new IllegalArgumentException("The use with id: %s doesn't exist!".formatted(uuid));
+    }
+    if (uptadeCustomer.getEmail() != null && customerDao.existCustomerWithEmail(uptadeCustomer.getEmail())) {
+      throw new IllegalArgumentException("The email %s already exist".formatted(uptadeCustomer.getEmail()));
     }
     uptadeCustomer.setId(uuid);
     customerDao.updateCustomer(uptadeCustomer);
