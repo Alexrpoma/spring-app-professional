@@ -47,4 +47,13 @@ public class CustomerService {
     }
     customerDao.deleteCustomerById(uuid);
   }
+
+  public void updateCustomer(UUID uuid, Customer uptadeCustomer) {
+    Optional<Customer> customerOptional = customerDao.getCustomerById(uuid);
+    if (!customerOptional.isPresent()) {
+      throw new IllegalArgumentException("The use with id: %s doesn't exist!".formatted(uuid));
+    }
+    uptadeCustomer.setId(uuid);
+    customerDao.updateCustomer(uptadeCustomer);
+  }
 }
