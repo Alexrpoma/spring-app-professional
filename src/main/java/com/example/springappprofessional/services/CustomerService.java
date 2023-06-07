@@ -40,4 +40,11 @@ public class CustomerService {
     customer.setPassword(encryptedPassword);
     customerDao.insertCostumer(customer);
   }
+
+  public void deleteCustomer(UUID uuid) {
+    if (!customerDao.existCustomerById(uuid)) {
+      throw new IllegalArgumentException("The use with id: %s doesn't exist!".formatted(uuid));
+    }
+    customerDao.deleteCustomerById(uuid);
+  }
 }

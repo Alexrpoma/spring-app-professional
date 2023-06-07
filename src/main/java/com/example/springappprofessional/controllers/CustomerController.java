@@ -29,4 +29,9 @@ public class CustomerController {
   public void registerCustomer(@RequestBody Customer customer) {
     customerService.addCustomer(customer);
   }
+
+  @DeleteMapping(path = "/{uuid}")
+  public void deleteCustomer(@PathVariable(name = "uuid") UUID uuid) {
+    customerService.deleteCustomer(uuid);
+  }
 }
