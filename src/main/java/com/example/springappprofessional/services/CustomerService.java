@@ -3,6 +3,7 @@ package com.example.springappprofessional.services;
 import com.example.springappprofessional.dao.CustomerDao;
 import com.example.springappprofessional.models.Customer;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +33,11 @@ public class CustomerService {
   }
 
   public void addCustomer(Customer customer) {
+    if (customerDao.existCustomerWithEmail(customer.getEmail())) {
+      throw new IllegalArgumentException("The email %s is already registered!".formatted(customer.getEmail()));
+    }
+    String encryptedPassword = BCrypt.hashpw(customer.getPassword(), BCrypt.gensalt());
+    customer.setPassword(encryptedPassword);
     customerDao.insertCostumer(customer);
   }
 }
