@@ -4,6 +4,7 @@ import com.example.springappprofessional.dao.CustomerDao;
 import com.example.springappprofessional.dtos.CustomerDTO;
 import com.example.springappprofessional.dtos.CustomerDTOMapper;
 import com.example.springappprofessional.models.Customer;
+import com.example.springappprofessional.models.CustomerRegistration;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -38,12 +39,19 @@ public class CustomerService {
     ));
   }
 
-  public void addCustomer(Customer customer) {
-    if (customerDao.existCustomerWithEmail(customer.getEmail())) {
-      throw new IllegalArgumentException("The email %s is already registered!".formatted(customer.getEmail()));
+  public void addCustomer(CustomerRegistration customerRegistration) {
+    if (customerDao.existCustomerWithEmail(customerRegistration.email())) {
+      throw new IllegalArgumentException(
+              "The email %s is already registered!"
+                      .formatted(customerRegistration.email()));
     }
-    String encryptedPassword = BCrypt.hashpw(customer.getPassword(), BCrypt.gensalt());
+    String encryptedPassword = BCrypt.hashpw(customerRegistration.password(), BCrypt.gensalt());
+    Customer customer = new Customer();
+    customer.setName(customerRegistration.name());
+    customer.setEmail(customerRegistration.email());
     customer.setPassword(encryptedPassword);
+    customer.setAge(customerRegistration.age());
+    customer.setGender(customerRegistration.gender());
     customerDao.insertCostumer(customer);
   }
 

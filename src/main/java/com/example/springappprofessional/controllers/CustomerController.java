@@ -2,6 +2,7 @@ package com.example.springappprofessional.controllers;
 
 import com.example.springappprofessional.dtos.CustomerDTO;
 import com.example.springappprofessional.models.Customer;
+import com.example.springappprofessional.models.CustomerRegistration;
 import com.example.springappprofessional.services.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class CustomerController {
   }
 
   @PostMapping
-  public void registerCustomer(@RequestBody Customer customer) {
+  public void registerCustomer(@RequestBody CustomerRegistration customer) {
     customerService.addCustomer(customer);
   }
 
