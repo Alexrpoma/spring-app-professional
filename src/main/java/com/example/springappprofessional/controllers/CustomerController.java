@@ -1,5 +1,6 @@
 package com.example.springappprofessional.controllers;
 
+import com.example.springappprofessional.dtos.CustomerDTO;
 import com.example.springappprofessional.models.Customer;
 import com.example.springappprofessional.services.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,12 @@ public class CustomerController {
   private final CustomerService customerService;
 
   @GetMapping
-  public List<Customer> getAllCustomer() {
+  public List<CustomerDTO> getAllCustomer() {
     return customerService.getAllCustomer();
   }
 
   @GetMapping(path = "/{uuid}")
-  public Customer getCustomer(@PathVariable(name = "uuid") UUID uuid) {
+  public CustomerDTO getCustomer(@PathVariable(name = "uuid") UUID uuid) {
     return customerService.getCustomer(uuid);
   }
 

@@ -1,12 +1,15 @@
 package com.example.springappprofessional.services;
 
 import com.example.springappprofessional.dao.CustomerDao;
+import com.example.springappprofessional.dtos.CustomerDTO;
+import com.example.springappprofessional.dtos.CustomerDTOMapper;
 import com.example.springappprofessional.models.Customer;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,14 +24,18 @@ public class CustomerService {
     this.customerDao = customerDao;
   }
 
-  public List<Customer> getAllCustomer() {
-    return customerDao.getAllCustomer();
+  public List<CustomerDTO> getAllCustomer() {
+    List<CustomerDTO> customerDTOS = new ArrayList<>();
+    CustomerDTOMapper customerDTOMapper = new CustomerDTOMapper();
+    customerDao.getAllCustomer().forEach(c -> customerDTOS.add(customerDTOMapper.apply(c)));
+    return customerDTOS;
   }
 
-  public Customer getCustomer(UUID uuid) {
+  public CustomerDTO getCustomer(UUID uuid) {
     Optional<Customer> customer = customerDao.getCustomerById(uuid);
     if (customer.isPresent()) {
-      return customer.get();
+      CustomerDTOMapper customerDTOMapper = new CustomerDTOMapper();
+      return customerDTOMapper.apply(customer.get());
     }
     throw new IllegalArgumentException("Oops resource not found!");
   }
