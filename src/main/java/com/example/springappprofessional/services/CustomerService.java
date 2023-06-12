@@ -9,35 +9,33 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
 
   private final CustomerDao customerDao;
+  private final CustomerDTOMapper customerDTOMapper;
 
   //In Qualifier, we can use Jdbc or Jpa for the different request to database.
-  public CustomerService(@Qualifier("Jdbc") CustomerDao customerDao) {
+  public CustomerService(@Qualifier("Jdbc") CustomerDao customerDao, CustomerDTOMapper customerDTOMapper) {
     this.customerDao = customerDao;
+    this.customerDTOMapper = customerDTOMapper;
   }
 
   public List<CustomerDTO> getAllCustomer() {
-    List<CustomerDTO> customerDTOS = new ArrayList<>();
-    CustomerDTOMapper customerDTOMapper = new CustomerDTOMapper();
-    customerDao.getAllCustomer().forEach(c -> customerDTOS.add(customerDTOMapper.apply(c)));
-    return customerDTOS;
+    return customerDao.getAllCustomer()
+            .stream().map(customerDTOMapper)
+            .collect(Collectors.toList());
   }
 
   public CustomerDTO getCustomer(UUID uuid) {
-    Optional<Customer> customer = customerDao.getCustomerById(uuid);
-    if (customer.isPresent()) {
-      CustomerDTOMapper customerDTOMapper = new CustomerDTOMapper();
-      return customerDTOMapper.apply(customer.get());
-    }
-    throw new IllegalArgumentException("Oops resource not found!");
+    return customerDTOMapper.apply(customerDao.getCustomerById(uuid).orElseThrow(
+            () -> new IllegalArgumentException("Oops resource not found!")
+    ));
   }
 
   public void addCustomer(Customer customer) {
