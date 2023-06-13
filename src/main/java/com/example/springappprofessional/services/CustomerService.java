@@ -3,6 +3,7 @@ package com.example.springappprofessional.services;
 import com.example.springappprofessional.dao.CustomerDao;
 import com.example.springappprofessional.dtos.CustomerDTO;
 import com.example.springappprofessional.dtos.CustomerDTOMapper;
+import com.example.springappprofessional.exceptions.ResourceNotFoundException;
 import com.example.springappprofessional.models.Customer;
 import com.example.springappprofessional.models.CustomerRegistration;
 import com.example.springappprofessional.models.CustomerUpdate;
@@ -36,7 +37,7 @@ public class CustomerService {
 
   public CustomerDTO getCustomer(UUID uuid) {
     return customerDTOMapper.apply(customerDao.getCustomerById(uuid).orElseThrow(
-            () -> new IllegalArgumentException("Oops resource not found!")
+            () -> new ResourceNotFoundException("Customer with id: %s not found.".formatted(uuid))
     ));
   }
 
