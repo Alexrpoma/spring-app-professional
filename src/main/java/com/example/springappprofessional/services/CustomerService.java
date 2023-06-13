@@ -5,6 +5,7 @@ import com.example.springappprofessional.dtos.CustomerDTO;
 import com.example.springappprofessional.dtos.CustomerDTOMapper;
 import com.example.springappprofessional.models.Customer;
 import com.example.springappprofessional.models.CustomerRegistration;
+import com.example.springappprofessional.models.CustomerUpdate;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -63,15 +64,24 @@ public class CustomerService {
   }
 
   @Transactional  //update customer if it is possible, assurance that the data is not corrupt
-  public void updateCustomer(UUID uuid, Customer uptadeCustomer) {
+  public void updateCustomer(UUID uuid, CustomerUpdate customerUpdate) {
     Optional<Customer> customerOptional = customerDao.getCustomerById(uuid);
-    if (customerOptional.isEmpty()) {
-      throw new IllegalArgumentException("The use with id: %s doesn't exist!".formatted(uuid));
-    }
-    if (uptadeCustomer.getEmail() != null && customerDao.existCustomerWithEmail(uptadeCustomer.getEmail())) {
-      throw new IllegalArgumentException("The email %s already exist".formatted(uptadeCustomer.getEmail()));
-    }
-    uptadeCustomer.setId(uuid);
-    customerDao.updateCustomer(uptadeCustomer);
+    customerOptional.ifPresentOrElse(customer -> {
+      if (customerUpdate.email() != null && !customerUpdate.email().equals(customer.getEmail())) {
+        if (customerDao.existCustomerWithEmail(customerUpdate.email())) {
+          throw new IllegalArgumentException("The email %s already exist".formatted(customerUpdate.email()));
+        }
+        customer.setEmail(customerUpdate.email());
+      }
+      if (customerUpdate.name() != null) {
+        customer.setName(customerUpdate.name());
+      }
+      if (customerUpdate.age() != null) {
+        customer.setAge(customerUpdate.age());
+      }
+      customerDao.updateCustomer(customer);
+    }, () -> customerOptional.orElseThrow(
+            () -> new IllegalArgumentException("The use with id: %s doesn't exist!".formatted(uuid))
+    ));
   }
 }

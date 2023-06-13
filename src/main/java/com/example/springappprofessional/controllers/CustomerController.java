@@ -3,6 +3,7 @@ package com.example.springappprofessional.controllers;
 import com.example.springappprofessional.dtos.CustomerDTO;
 import com.example.springappprofessional.models.Customer;
 import com.example.springappprofessional.models.CustomerRegistration;
+import com.example.springappprofessional.models.CustomerUpdate;
 import com.example.springappprofessional.services.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class CustomerController {
   }
 
   @PutMapping(path = "/{uuid}")
-  public void updateCustomer(@PathVariable(name = "uuid") UUID uuid, @RequestBody Customer customer) {
+  public void updateCustomer(@PathVariable(name = "uuid") UUID uuid, @RequestBody CustomerUpdate customer) {
     customerService.updateCustomer(uuid, customer);
   }
 }
