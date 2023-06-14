@@ -1,41 +1,15 @@
 package com.example.springappprofessional.services;
 
-import com.example.springappprofessional.dtos.CustomerDTOMapper;
+import com.example.springappprofessional.AbstractTestContainers;
 import com.example.springappprofessional.mappers.CustomerRowMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.testcontainers.containers.PostgreSQLContainer;
 
-import javax.sql.DataSource;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class CustomerJDBCDataAccessServiceTest {
+class CustomerJDBCDataAccessServiceTest extends AbstractTestContainers {
 
   private CustomerJDBCDataAccessService customerJDBCDataAccessServiceTest;
-
-  private CustomerRowMapper customerRowMapper = new CustomerRowMapper();
-
-  private final PostgreSQLContainer<?> postgreSQLContainer =
-      new PostgreSQLContainer<>("PostgresSpringProfessional")
-          .withDatabaseName("spring_professional_data")
-          .withUsername("alex")
-          .withPassword("alex");
-
-  private DataSource getDataSource() {
-    return DataSourceBuilder.create()
-        .driverClassName(postgreSQLContainer.getDriverClassName())
-        .url(postgreSQLContainer.getJdbcUrl())
-        .username(postgreSQLContainer.getUsername())
-        .password(postgreSQLContainer.getPassword())
-        .build();
-  }
-
-  private JdbcTemplate getJdbcTemplate() {
-    return new JdbcTemplate(getDataSource());
-  }
+  private final CustomerRowMapper customerRowMapper = new CustomerRowMapper();
 
   @BeforeEach
   void setUp() {
