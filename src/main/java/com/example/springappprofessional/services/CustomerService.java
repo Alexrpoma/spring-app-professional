@@ -3,6 +3,7 @@ package com.example.springappprofessional.services;
 import com.example.springappprofessional.dao.CustomerDao;
 import com.example.springappprofessional.dtos.CustomerDTO;
 import com.example.springappprofessional.dtos.CustomerDTOMapper;
+import com.example.springappprofessional.exceptions.DuplicateResourceException;
 import com.example.springappprofessional.exceptions.ResourceNotFoundException;
 import com.example.springappprofessional.models.Customer;
 import com.example.springappprofessional.models.CustomerRegistration;
@@ -43,7 +44,7 @@ public class CustomerService {
 
   public void addCustomer(CustomerRegistration customerRegistration) {
     if (customerDao.existCustomerWithEmail(customerRegistration.email())) {
-      throw new IllegalArgumentException(
+      throw new DuplicateResourceException(
               "The email %s is already registered!"
                       .formatted(customerRegistration.email()));
     }
@@ -59,7 +60,7 @@ public class CustomerService {
 
   public void deleteCustomer(UUID uuid) {
     if (!customerDao.existCustomerById(uuid)) {
-      throw new IllegalArgumentException("The use with id: %s doesn't exist!".formatted(uuid));
+      throw new ResourceNotFoundException("The use with id: %s doesn't exist!".formatted(uuid));
     }
     customerDao.deleteCustomerById(uuid);
   }
@@ -70,7 +71,7 @@ public class CustomerService {
     customerOptional.ifPresentOrElse(customer -> {
       if (customerUpdate.email() != null && !customerUpdate.email().equals(customer.getEmail())) {
         if (customerDao.existCustomerWithEmail(customerUpdate.email())) {
-          throw new IllegalArgumentException("The email %s already exist".formatted(customerUpdate.email()));
+          throw new DuplicateResourceException("The email %s already exist".formatted(customerUpdate.email()));
         }
         customer.setEmail(customerUpdate.email());
       }
@@ -82,7 +83,7 @@ public class CustomerService {
       }
       customerDao.updateCustomer(customer);
     }, () -> customerOptional.orElseThrow(
-            () -> new IllegalArgumentException("The use with id: %s doesn't exist!".formatted(uuid))
+            () -> new ResourceNotFoundException("The use with id: %s doesn't exist!".formatted(uuid))
     ));
   }
 }
