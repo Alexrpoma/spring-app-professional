@@ -4,6 +4,7 @@ import com.example.springappprofessional.dao.CustomerDao;
 import com.example.springappprofessional.dtos.CustomerDTO;
 import com.example.springappprofessional.dtos.CustomerDTOMapper;
 import com.example.springappprofessional.exceptions.DuplicateResourceException;
+import com.example.springappprofessional.exceptions.RequestValidationException;
 import com.example.springappprofessional.exceptions.ResourceNotFoundException;
 import com.example.springappprofessional.models.Customer;
 import com.example.springappprofessional.models.CustomerRegistration;
@@ -47,6 +48,9 @@ public class CustomerService {
       throw new DuplicateResourceException(
               "The email %s is already registered!"
                       .formatted(customerRegistration.email()));
+    }
+    if (customerRegistration.age() < 5 || customerRegistration.age() > 70 ) {
+      throw new RequestValidationException("The age must be between 5 and 70");
     }
     String encryptedPassword = BCrypt.hashpw(customerRegistration.password(), BCrypt.gensalt());
     Customer customer = new Customer();

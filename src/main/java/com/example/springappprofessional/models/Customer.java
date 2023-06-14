@@ -1,6 +1,8 @@
 package com.example.springappprofessional.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.util.UUID;
@@ -36,6 +38,8 @@ public class Customer {
   private String name;
   @Column(nullable = false)
   private String email;
+  @Min(value = 5, message = "The minimum age is 5")
+  @Max(value = 70, message = "The maximum age is 70")
   @Column(nullable = false)
   private Integer age;
   @Column(nullable = false)
